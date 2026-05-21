@@ -586,23 +586,36 @@ strong { font-weight: 700; color: var(--fg); }
 .case-body p em { color: var(--fg); font-style: italic; }
 .case-body p strong { color: var(--fg); font-weight: 700; }
 
+/* All case figures share a single max-width so the left/right edges of
+   text and images line up. Pair and Full are visually identical in width;
+   pair simply splits the same column into two equal cells. */
 .case-figure {
-  margin: clamp(56px, 9vh, 96px) 0;
+  margin: clamp(56px, 9vh, 96px) auto;
+  max-width: 960px;
 }
 .case-figure img {
   width: 100%;
   border-radius: 6px;
   background: var(--bg-2);
+  display: block;
 }
 .case-figure--full {
-  margin-inline: calc(50% - 50vw + var(--pad-x));
-  max-width: calc(100vw - 2 * var(--pad-x));
+  /* explicit override — same as default but kept for HTML clarity */
+  max-width: 960px;
+  margin-inline: auto;
 }
-@media (min-width: 1320px) {
-  .case-figure--full {
-    margin-inline: calc(-1 * (var(--container) - 760px) / 2);
-    max-width: var(--container);
-  }
+.case-figure--pair {
+  display: grid;
+  gap: 16px;
+}
+.case-figure--pair > figure {
+  /* CRITICAL: kill the browser default <figure> margin (1em 40px) that
+     would otherwise shrink each grid cell's content by 80px. */
+  margin: 0;
+  width: 100%;
+}
+@media (min-width: 720px) {
+  .case-figure--pair { grid-template-columns: 1fr 1fr; }
 }
 .case-figure figcaption {
   font-family: var(--mono);
@@ -611,14 +624,6 @@ strong { font-weight: 700; color: var(--fg); }
   text-transform: uppercase;
   color: var(--muted);
   margin-top: 14px;
-}
-
-.case-figure--pair {
-  display: grid;
-  gap: 16px;
-}
-@media (min-width: 720px) {
-  .case-figure--pair { grid-template-columns: 1fr 1fr; }
 }
 
 /* Responsive video embed */
